@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "Hash": "cil54hOWsGNedOGJbxwGsJWWuSEKCegqzRhosemIyqQ=",
+  "Source": "MockService",
+  "BasePath": "_content/MockService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "MockService/wwwroot",
+      "Source": "MockService",
+      "ContentRoot": "/Users/aleksandr.z/MockService/MockService/wwwroot/",
+      "BasePath": "_content/MockService",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/Users/aleksandr.z/MockService/MockService/wwwroot/mock.pdf",
+      "SourceId": "MockService",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/aleksandr.z/MockService/MockService/wwwroot/",
+      "BasePath": "_content/MockService",
+      "RelativePath": "mock.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/mock.pdf"
+    }
+  ]
+}
