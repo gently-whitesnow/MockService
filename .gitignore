@@ -275,6 +275,7 @@ paket-files/
 
 # JetBrains Rider
 .idea/
+.git/
 *.sln.iml
 
 # CodeRush
@@ -317,5 +318,3 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
-/obj/
-/bin/
