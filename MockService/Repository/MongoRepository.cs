@@ -2,7 +2,7 @@ using ATI.Services.Common.Behaviors;
 using ATI.Services.Common.Initializers.Interfaces;
 using ATI.Services.Common.Logging;
 using Microsoft.Extensions.Options;
-using MockService.Models.Mongo;
+using MockService.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -73,8 +73,7 @@ namespace MockService.Repository
         {
             try
             {
-                return new OperationResult<List<Mock>>(
-                    await _mock.Find(Builders<Mock>.Filter.Empty).ToListAsync());
+                return new OperationResult<List<Mock>>(await _mock.Find(Builders<Mock>.Filter.Empty).ToListAsync());
             }
             catch (Exception e)
             {
@@ -87,13 +86,12 @@ namespace MockService.Repository
         {
             try
             {
-                return new OperationResult<List<Mock>>(await _mock
-                    .Find(Builders<Mock>.Filter.Eq(i => i.ServiceName, serviceName)).ToListAsync());
+                return new OperationResult<List<Mock>>(
+                    await _mock.Find(Builders<Mock>.Filter.Eq(i => i.FilterName, serviceName)).ToListAsync());
             }
             catch (Exception e)
             {
-                _logger.ErrorWithObject(e, "Error while getting template by serviceName",
-                    new {ServiceName = serviceName});
+                _logger.ErrorWithObject(e, "Error while getting template by serviceName", new {ServiceName = serviceName});
                 return new OperationResult<List<Mock>>(ActionStatus.InternalServerError);
             }
         }
@@ -104,8 +102,7 @@ namespace MockService.Repository
             {
                 var filter = Builders<Mock>.Filter.Eq(i => i.Id, id);
 
-                return new OperationResult<Mock>(await _mock
-                    .Find(filter).FirstOrDefaultAsync());
+                return new OperationResult<Mock>(await _mock.Find(filter).FirstOrDefaultAsync());
             }
             catch (Exception e)
             {
@@ -146,8 +143,7 @@ namespace MockService.Repository
 
                 var filter = Builders<Mock>.Filter.Where(m => m.Id == id);
 
-                await _mock
-                    .UpdateOneAsync(filter, updates);
+                await _mock.UpdateOneAsync(filter, updates);
                 return OperationResult.Ok;
             }
             catch (Exception e)
@@ -164,10 +160,8 @@ namespace MockService.Repository
                 var updates = Builders<Mock>.Update
                     .Set(s => s.IsActive, false);
 
-                var filter = Builders<Mock>.Filter.Where(m =>
-                    m.Path == url && m.Method == method);
-                await _mock
-                    .UpdateManyAsync(filter, updates);
+                var filter = Builders<Mock>.Filter.Where(m => m.Path == url && m.Method == method);
+                await _mock.UpdateManyAsync(filter, updates);
                 return OperationResult.Ok;
             }
             catch (Exception e)
@@ -236,7 +230,7 @@ namespace MockService.Repository
                 }
 
                 var updates = Builders<Mock>.Update
-                    .Set(m => m.ServiceName, mock.ServiceName)
+                    .Set(m => m.FilterName, mock.FilterName)
                     .Set(m => m.Description, mock.Description)
                     .Set(m => m.Path, mock.Path)
                     .Set(m => m.Method, mock.Method)

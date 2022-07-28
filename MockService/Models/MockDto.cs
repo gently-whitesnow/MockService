@@ -1,7 +1,7 @@
 using System.Net;
 using HttpMethod = Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod;
 
-namespace MockService.Models.Mongo
+namespace MockService.Models
 {
     public record MockDto
     {

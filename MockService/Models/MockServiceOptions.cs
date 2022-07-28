@@ -1,4 +1,4 @@
-namespace MockService.Models.Options
+namespace MockService.Models
 {
     public class MockServiceOptions
     {

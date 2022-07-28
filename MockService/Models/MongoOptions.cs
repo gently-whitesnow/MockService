@@ -1,4 +1,4 @@
-namespace MockService.Models.Mongo
+namespace MockService.Models
 {
     public class MongoOptions
     {

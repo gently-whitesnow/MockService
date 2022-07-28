@@ -2,8 +2,6 @@ using System.Net;
 using ATI.Services.Common.Behaviors;
 using Microsoft.Extensions.Options;
 using MockService.Models;
-using MockService.Models.Mongo;
-using MockService.Models.Options;
 using MockService.Repository;
 using MongoDB.Bson;
 using Newtonsoft.Json;
@@ -23,13 +21,13 @@ namespace MockService.Helpers
             _mongoRepository = mongoRepository;
         }
 
-        public async Task<OperationResult<(JContainer json, HttpStatusCode statusCode, bool isPdf)>> GetMockResponseAsync(
-            string rowPath, string method)
+        public async Task<OperationResult<(JContainer json, HttpStatusCode statusCode, bool isPdf)>>
+            GetMockResponseAsync(string rowPath, string method)
         {
             // удаляем прокси адрес
-            var path = rowPath.Replace("/v1/mockservice", "");
+            var path = rowPath.Replace("/mockservice", "");
 
-            // ищем мок по адресу и http_методу
+            // находим запрашиваемый мок
             var findOperation = await _mongoRepository.GetActiveMockByPathAndMethodAsync(path, method);
 
             if (!findOperation.Success)
@@ -37,11 +35,11 @@ namespace MockService.Helpers
                 return new OperationResult<(JContainer, HttpStatusCode, bool)>(findOperation.ActionStatus);
             }
 
-            // Проверка возврата пдф
+            // В приоритете пдф
             if (findOperation.Value.IsPdf)
             {
                 return new OperationResult<(JContainer, HttpStatusCode, bool)>
-                    ((null, findOperation.Value.StatusCode, true));
+                    ((new JObject(), findOperation.Value.StatusCode, true));
             }
 
             // json
@@ -73,7 +71,7 @@ namespace MockService.Helpers
             // создаем мок
             return await _mongoRepository.CreateMockAsync(mock);
         }
-        
+
         public async Task<OperationResult> EditMockAsync(Mock mock)
         {
             // Очистка path от query запроса 
@@ -105,14 +103,14 @@ namespace MockService.Helpers
             var mongoOperation = await _mongoRepository.GetAllMocksAsync();
             if (!mongoOperation.Success)
                 return new OperationResult<List<GetFiltersResponse>>(mongoOperation);
-            var result = mongoOperation.Value.GroupBy(m => m.ServiceName)
+            var result = mongoOperation.Value.GroupBy(m => m.FilterName)
                 .Select(p =>
-                new GetFiltersResponse
-                {
-                    FilterName = p.Key,
-                    Count = p.Count(),
-                    LastCreateDate = p.Max(d=>d.CreateDate)
-                }).OrderByDescending(g => g!.LastCreateDate).ToList();
+                    new GetFiltersResponse
+                    {
+                        FilterName = p.Key,
+                        Count = p.Count(),
+                        LastCreateDate = p.Max(d => d.CreateDate)
+                    }).OrderByDescending(g => g!.LastCreateDate).ToList();
             return new OperationResult<List<GetFiltersResponse>>(result);
         }
 
@@ -135,7 +133,7 @@ namespace MockService.Helpers
                 Method = i.Method,
                 Path = i.Path,
                 Domain = _mockServiceOptions.DomainMockPath,
-                FilterName = i.ServiceName
+                FilterName = i.FilterName
             }).ToList());
         }
 
@@ -155,7 +153,7 @@ namespace MockService.Helpers
             // включаем переданный мок
             return await _mongoRepository.EnableMockAsync(id);
         }
-        
+
         private static string ModificationPath(string path)
         {
             path = path.Trim();
@@ -169,7 +167,7 @@ namespace MockService.Helpers
             // Проверка чтобы первый символ был "/"
             if (path[0] != '/')
                 path = "/" + path;
-            
+
             return path;
         }
     }

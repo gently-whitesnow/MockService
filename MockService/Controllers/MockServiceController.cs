@@ -5,7 +5,6 @@ using ATI.Services.Common.Swagger;
 using Microsoft.AspNetCore.Mvc;
 using MockService.Helpers;
 using MockService.Models;
-using MockService.Models.Mongo;
 
 namespace MockService.Controllers
 {
@@ -19,7 +18,7 @@ namespace MockService.Controllers
         }
 
         /// <summary>
-        /// Метод отдающий замоканный ответ
+        /// Метод, возвращающий подготовленный ответ
         /// </summary>
         /// <returns></returns>
         [Route("v1/mockservice/{*catchall}")]
@@ -38,26 +37,22 @@ namespace MockService.Controllers
         }
 
         /// <summary>
-        /// Создание мока
+        /// Добавления мока
         /// </summary>
         /// <param name="mock"></param>
         /// <returns></returns>
-        [ProducesResponseType(200)]
         [HttpPost("v1/mock")]
-        [ValidateModelState]
         public Task<IActionResult> CreateMock([FromBody] Mock mock)
         {
             return _mockServiceHelper.CreateMockAsync(mock).AsActionResultAsync();
         }
-        
+
         /// <summary>
         /// Редактирование мока
         /// </summary>
         /// <param name="mock"></param>
         /// <returns></returns>
-        [ProducesResponseType(200)]
         [HttpPut("v1/mock")]
-        [ValidateModelState]
         public Task<IActionResult> EditMock([FromBody] Mock mock)
         {
             return _mockServiceHelper.EditMockAsync(mock).AsActionResultAsync();
@@ -68,7 +63,6 @@ namespace MockService.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [ProducesResponseType(200)]
         [HttpDelete("v1/mock")]
         public Task<IActionResult> DeleteMock([Required] [FromQuery] string id)
         {
@@ -77,10 +71,9 @@ namespace MockService.Controllers
 
 
         /// <summary>
-        /// Получение summary по существующим фильтрам
+        /// Получение существующих фильтров (групп моков)
         /// </summary>
         /// <returns></returns>
-        [ProducesResponseType(200)]
         [HttpGet("v1/mock/filters")]
         public Task<IActionResult> GetFilters()
         {
@@ -92,7 +85,6 @@ namespace MockService.Controllers
         /// Получение всех шаблонов для группы моков
         /// </summary>
         /// <returns></returns>
-        [ProducesResponseType(200)]
         [HttpGet("v1/mocks")]
         public Task<IActionResult> GetMockByFilterName([Required] [FromQuery] string name)
         {
@@ -100,10 +92,9 @@ namespace MockService.Controllers
         }
 
         /// <summary>
-        /// Метод переключения мока
+        /// Метод включения мока
         /// </summary>
         /// <returns></returns>
-        [ProducesResponseType(200)]
         [HttpPatch("v1/mock")]
         public Task<IActionResult> EnableMock([Required] [FromQuery] string id)
         {

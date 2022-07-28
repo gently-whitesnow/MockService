@@ -55,7 +55,6 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 });
 
 
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

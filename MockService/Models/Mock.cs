@@ -6,14 +6,14 @@ using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json.Linq;
 using HttpMethod = Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod;
 
-namespace MockService.Models.Mongo
+namespace MockService.Models
 {
     [BsonIgnoreExtraElements]
     public class Mock
     {
         [BsonId] public string Id { get; set; }
         [Required]
-        public string ServiceName { get; set; }
+        public string FilterName { get; set; }
         [Required]
         public bool IsPdf { get; set; }
         [Required]
