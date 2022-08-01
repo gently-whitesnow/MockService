@@ -112,15 +112,12 @@ namespace MockService.Repository
         }
 
         public async Task<OperationResult<Mock>> GetActiveMockByPathAndMethodAsync(string path,
-            string httpMethod)
+            HttpMethod httpMethod)
         {
             try
             {
-                if (!Enum.TryParse(httpMethod, true, out HttpMethod httpMethodSearch))
-                    return new OperationResult<Mock>(ActionStatus.BadRequest);
-
                 var filter =
-                    Builders<Mock>.Filter.Where(m => m.IsActive && m.Path == path && m.Method == httpMethodSearch);
+                    Builders<Mock>.Filter.Where(m => m.IsActive && m.Path == path && m.Method == httpMethod);
 
                 var findOperation = await _mock
                     .Find(filter).ToListAsync();
@@ -179,17 +176,17 @@ namespace MockService.Repository
                 {
                     case JTokenType.Object:
                     {
-                        mock.BodyForMonga = BsonDocument.Parse(mock.Body.ToString());
+                        mock.BodyForMongo = BsonDocument.Parse(mock.Body.ToString());
                         break;
                     }
                     case JTokenType.Array:
                     {
-                        mock.BodyForMonga = BsonSerializer.Deserialize<BsonArray>(mock.Body.ToString());
+                        mock.BodyForMongo = BsonSerializer.Deserialize<BsonArray>(mock.Body.ToString());
                         break;
                     }
                     default:
                     {
-                        mock.BodyForMonga = null;
+                        mock.BodyForMongo = null;
                         break;
                     }
                 }
@@ -214,17 +211,17 @@ namespace MockService.Repository
                 {
                     case JTokenType.Object:
                     {
-                        mock.BodyForMonga = BsonDocument.Parse(mock.Body.ToString());
+                        mock.BodyForMongo = BsonDocument.Parse(mock.Body.ToString());
                         break;
                     }
                     case JTokenType.Array:
                     {
-                        mock.BodyForMonga = BsonSerializer.Deserialize<BsonArray>(mock.Body.ToString());
+                        mock.BodyForMongo = BsonSerializer.Deserialize<BsonArray>(mock.Body.ToString());
                         break;
                     }
                     default:
                     {
-                        mock.BodyForMonga = null;
+                        mock.BodyForMongo = null;
                         break;
                     }
                 }
@@ -235,7 +232,7 @@ namespace MockService.Repository
                     .Set(m => m.Path, mock.Path)
                     .Set(m => m.Method, mock.Method)
                     .Set(m => m.StatusCode, mock.StatusCode)
-                    .Set(m => m.BodyForMonga, mock.BodyForMonga)
+                    .Set(m => m.BodyForMongo, mock.BodyForMongo)
                     .Set(m => m.IsPdf, mock.IsPdf)
                     .Set(m => m.IsActive, mock.IsActive)
                     .Set(m => m.CreateDate, mock.CreateDate);

@@ -63,8 +63,8 @@ namespace MockService.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("v1/mock")]
-        public Task<IActionResult> DeleteMock([Required] [FromQuery] string id)
+        [HttpDelete("v1/mock/{id}")]
+        public Task<IActionResult> DeleteMock([Required] string id)
         {
             return _mockServiceHelper.DeleteMockAsync(id).AsActionResultAsync();
         }
@@ -85,8 +85,8 @@ namespace MockService.Controllers
         /// Получение всех шаблонов для группы моков
         /// </summary>
         /// <returns></returns>
-        [HttpGet("v1/mocks")]
-        public Task<IActionResult> GetMockByFilterName([Required] [FromQuery] string name)
+        [HttpGet("v1/mocks/{name}")]
+        public Task<IActionResult> GetMockByFilterName([Required] string name)
         {
             return _mockServiceHelper.GetMockByFilterAsync(name).AsActionResultAsync();
         }
@@ -95,8 +95,8 @@ namespace MockService.Controllers
         /// Метод включения мока
         /// </summary>
         /// <returns></returns>
-        [HttpPatch("v1/mock")]
-        public Task<IActionResult> EnableMock([Required] [FromQuery] string id)
+        [HttpPatch("v1/mock/{id}")]
+        public Task<IActionResult> EnableMock([Required] string id)
         {
             return _mockServiceHelper.EnableMockAsync(id).AsActionResultAsync();
         }

@@ -6,6 +6,7 @@ using MockService.Repository;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using HttpMethod = Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod;
 
 namespace MockService.Helpers
 {
@@ -28,8 +29,10 @@ namespace MockService.Helpers
             var path = rowPath.Replace("/mockservice", "");
 
             // находим запрашиваемый мок
-            var findOperation = await _mongoRepository.GetActiveMockByPathAndMethodAsync(path, method);
-
+            if (!Enum.TryParse(method, true, out HttpMethod httpMethod))
+                return new OperationResult<(JContainer, HttpStatusCode, bool)>(ActionStatus.BadRequest);
+            
+            var findOperation = await _mongoRepository.GetActiveMockByPathAndMethodAsync(path, httpMethod);
             if (!findOperation.Success)
             {
                 return new OperationResult<(JContainer, HttpStatusCode, bool)>(findOperation.ActionStatus);
@@ -43,9 +46,9 @@ namespace MockService.Helpers
             }
 
             // json
-            if (findOperation.Value.BodyForMonga != null)
+            if (findOperation.Value.BodyForMongo != null)
             {
-                var response = (JContainer) JToken.Parse(findOperation.Value.BodyForMonga.ToJson());
+                var response = (JContainer) JToken.Parse(findOperation.Value.BodyForMongo.ToJson());
                 return new OperationResult<(JContainer, HttpStatusCode, bool)>
                     ((response, findOperation.Value.StatusCode, false));
             }
@@ -123,9 +126,9 @@ namespace MockService.Helpers
             return new OperationResult<List<MockDto>>(mongoOperation.Value.Select(i => new MockDto
             {
                 Id = i.Id,
-                Body = i.BodyForMonga is null
+                Body = i.BodyForMongo is null
                     ? null
-                    : JsonConvert.DeserializeObject(i.BodyForMonga.ToJson()),
+                    : JsonConvert.DeserializeObject(i.BodyForMongo.ToJson()),
                 StatusCode = i.StatusCode,
                 Description = i.Description,
                 IsActive = i.IsActive,

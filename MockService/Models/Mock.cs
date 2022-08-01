@@ -21,7 +21,7 @@ namespace MockService.Models
         [Required]
         public bool IsActive { get; set; }
 
-        [JsonIgnore] public BsonValue BodyForMonga { get; set; }
+        [JsonIgnore] public BsonValue BodyForMongo { get; set; }
 
         [BsonIgnore] public JContainer Body { get; set; }
         [Required]
